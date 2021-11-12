@@ -8,6 +8,7 @@ Reusable Klaviyo Back in Stock Popup for Shopify Themes
 - Can show / hide different elements on page when changing to / from out of stock and in stock variants
 
 ### Setup
+- Make sure you have Klaviyo set up on your theme!!!!
 - Add ```product-back-in-stock-modal.liquid``` to sections folder, then render the section outside your theme.liquid body tags 
 ``` 
     </body>
