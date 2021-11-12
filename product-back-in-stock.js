@@ -11,12 +11,12 @@ POPUP VARIABLES
 
 ********************************/
 window.klaviyoBIS.bisConfig = {
-    key: '******', 
+    key: 'WXeasw', 
     variantSelectId: "product-select",
-    tag: 'notify-me',
-    toggleOnCallback: document.querySelector('.shopify-payment-button')
+    tag: 'notify-me', 
+    toggleOnCallback: document.querySelector('.shopify-payment-button') 
 }
-window.klaviyoBIS.productJSON = JSON.parse(document.getElementById("product-json").innerHTML);
+window.klaviyoBIS.productJSON = JSON.parse(document.getElementById("product-json").innerHTML);  
 
 /******************************/
 window.klaviyoBIS.bis = {
@@ -47,19 +47,26 @@ const bis = window.klaviyoBIS.bis;
 const bisConfig = window.klaviyoBIS.bisConfig;
 const productJSON = window.klaviyoBIS.productJSON;
 const customBIS = {
-
   adjustPopupPosition: () => {
     const offsetTop = bis.popupContainer.offsetHeight / 2;
     const offsetLeft = bis.popupContainer.offsetWidth / 2;
     bis.popupContainer.style.top = 'calc(50vh - ' + offsetTop + 'px)';
-    bis.popupContainer.style.left = 'calc(50vw - ' + offsetLeft + 'px)';
+    bis.popupContainer.style.left = 'calc(50vw - ' + offsetLeft + 'px)';   
   },
-
+  
+  togglePopup: (state) => {
+      if(state == 'show'){
+        bis.sectionContainer.classList.add('active');
+        document.querySelector('body').classList.add('notify-me-noscroll');   
+      } else if (state == 'hide'){
+        bis.sectionContainer.classList.remove('active');
+        document.querySelector('body').classList.remove('notify-me-noscroll');   
+      }
+  },
+    
   checkIfBIS: (variant) => {
-
     bis.popupContainer.setAttribute('data-variant-id', variant.id);
     bis.popupContainer.setAttribute('data-image', variant.featured_image.src);
-
     async function updateImg(){
       if(bis.popupContainer.querySelector('.notify-me-image')){
         bis.popupContainer.querySelector('.notify-me-image').setAttribute('src', bis.popupContainer.getAttribute('data-image'));
@@ -69,11 +76,10 @@ const customBIS = {
     updateImg().then((success) => {
       if(success){
         setTimeout( () => {
-            this.adjustPopupPosition();
+           customBIS.adjustPopupPosition();
         }, 100);
       }
     });
-
     let isTagged = false;
     if(bisConfig.tag){
       for(let tag in productJSON.tags){
@@ -83,7 +89,6 @@ const customBIS = {
         }
       }
     }
-
     if(isTagged || !variant.available){
       bis.button.classList.add("notify-me-bis");
       bis.button.innerHTML = bis.cta;
@@ -98,7 +103,7 @@ const customBIS = {
       }
     }
   },
-
+    
   submitBISForm: (key, email, variantId, productId) => {
       fetch("https://a.klaviyo.com/onsite/components/back-in-stock/subscribe", {
         headers: {
@@ -122,25 +127,16 @@ const customBIS = {
           bis.popupText.innerHTML = bis.success;
           return true;
         }
+        
       }).then((success) => {
         if(success){
-          setTimeout( () => {this.togglePopup('hide')}, 2000);
+          setTimeout( () => customBIS.togglePopup('hide'), 2000);
         }
       })
       .catch((err) => {
         console.error(err);
       });
-
-  },
-
-  togglePopup: (state) => {
-      if(state == 'show'){
-        bis.sectionContainer.classList.add('active');
-        document.querySelector('body').classList.add('notify-me-noscroll');
-      } else if (state == 'hide'){
-        bis.sectionContainer.classList.remove('active');
-        document.querySelector('body').classList.remove('notify-me-noscroll');
-      }
+    
   }
 }
 
@@ -157,19 +153,19 @@ EVENT LISTENERS
       customBIS.togglePopup('show');
     }
   });
-
+  
 /*TRIGGER FORM SUBMIT*/
   bis.popupContainerBtn.addEventListener('click', () =>{
     const bisEmail = document.querySelector('#notify-me-popup input[type="email"]').value;
-    customBIS.submitBISForm(bisConfig.key, bisEmail, bis.popupContainer.getAttribute('data-variant-id'), bis.popupContainer.getAttribute('data-product-id'));
+    customBIS.submitBISForm(bisConfig.key, bisEmail, bis.popupContainer.getAttribute('data-variant-id'), bis.popupContainer.getAttribute('data-product-id'));                                   
   });
-
+  
 /*CLOSE POPUP*/
   bis.popupClose.addEventListener('click', () => {
   	customBIS.togglePopup('hide');
   });
-  bis.popupOverlay.addEventListener('click', () =>{
-    customBIS.togglePopup('hide');
+  bis.popupOverlay.addEventListener('click', () => {
+    customBIS.togglePopup('hide');                              
   });
 
 /*RECENTER WHEN RESIZED*/
