@@ -1,0 +1,115 @@
+{%style%}
+  .notify-me-image-container{
+    max-width:{{section.settings.image_width}}px;
+  }
+  #notify-me-popup-container{
+    background-color: {{section.settings.background}};
+	padding: {{section.settings.popup_padding}}px;
+  }
+{%endstyle%}
+
+{{'product-back-in-stock.css' | asset_url | stylesheet_tag}}
+
+<div id="notify-me-container">
+  <div class="notify-me-overlay"></div>
+  <div id="notify-me-popup-container"
+       data-product-id="{{product.id}}"
+       data-variant-id="{{product.selected_or_first_available_variant.id}}"
+       data-image="{{product.selected_or_first_available_variant.image | img_url: '200x'}}"
+       data-notify-me-cta="{{section.settings.notify-me-cta | replace: '"', "'"}}"
+       data-notify-me-text-success="{{section.settings.notify-me-text-success | replace: '"', "'"}}"
+       data-notify-me-text-error="{{section.settings.notify-me-text-error | replace: '"', "'"}}">
+    <div id="notify-me-popup">
+      <div class="notify-me-close">
+      	{%comment%} put your svg here{%endcomment%}
+        X
+      </div>
+      <h4>{{product.title}}</h4>
+      {%if section.settings.show_image%}
+      <div class="notify-me-image-container">
+      	<img class="notify-me-image" src=""/>
+      </div>
+      {%endif%}
+      <div class="notify-me-text">{{section.settings.notify-me-text}}</div>
+      <div class="notify-me-form">
+        <input type="email" placeholder="Email" value="{%if customer%}{{customer.email}}{%endif%}"/>
+        <a class="btn primary">{{section.settings.notify-me-cta}}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Klaviyo Back In Stock",
+    "settings": [
+	
+	  {
+        "type": "header",
+		"content": "Popup Settings"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_image",
+        "label": "Show Image",
+        "default": true
+	  },
+	  {
+        "type": "text",
+        "id": "notify-me-cta",
+        "label": "Header",
+		"default": "Notify me when available"
+      },
+	  {
+        "type": "range",
+        "id": "image_width",
+        "min": 50,
+        "max": 500,
+        "step": 10,
+        "unit": "px",
+        "label": "Image Max Width",
+        "default": 200
+      },
+      {
+        "type": "richtext",
+        "id": "notify-me-text",
+        "label": "Subheader",
+		"default": "<p>Notify me when product is available</p>"
+      },
+	  {
+        "type": "richtext",
+        "id": "notify-me-text-success",
+        "label": "Success message",
+		"default": "<p>Thanks! You will receive an email when this product is available.</p>"
+      },
+	  {
+        "type": "richtext",
+        "id": "notify-me-text-error",
+        "label": "Error message",
+		"default": "<p>Please enter a valid email address.</p>"
+      },
+	  {
+        "type": "range",
+        "id": "popup_padding",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Popup Padding",
+        "default": 50
+      },
+      {
+        "type": "color_background",
+        "id": "background",
+        "label": "Background",
+        "default": "white"
+      }
+	]
+  }
+{% endschema %}
+
+
+<script type="module" src="{{ 'product-back-in-stock.js' | asset_url }}"></script>
+
+{%comment%} OPTIONAL IF VARIANT CODE EXISTS{%endcomment%}
+<script type="module" src="{{ 'variant-change.js' | asset_url }}"></script>
