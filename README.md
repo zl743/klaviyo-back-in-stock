@@ -37,7 +37,7 @@ function selectCallback(variant) {
 - Configure your site-specific variables in ```product-back-in-stock.js```
 ```
 window.klaviyoBIS.bisConfig = {
-    key: 'WXeasw', //6 character public api key
+    key: 'abcdef', //6 character public api key
     variantSelectId: "product-select", //must have attribute of name="id" in select tag. OPTIONAL if variant callback function already exists
     tag: 'notify-me', //tagged with this will show notify me regardless of availability. OPTIONAL
     toggleOnCallback: document.querySelector('.shopify-payment-button') //hide these elements on notify me, show otherwise. OPTIONAL
